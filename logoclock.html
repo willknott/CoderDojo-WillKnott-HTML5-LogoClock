@@ -9,8 +9,14 @@
 <script>
 var canvas = document.getElementById('ClockCanvas');
 var context = canvas.getContext('2d');
-
+var clockImage = new Image();
+var clockImageLoaded = false;
+clockImage.onload = function(){
+	clockImageLoaded = true;
+}
+clockImage.src = 'logo.png';
 function addBackgroundImage(){
+	context.drawImage(clockImage, 0,0,canvas.width, canvas.height);
 }
 function drawHourHand(){
 }
@@ -19,10 +25,18 @@ function drawMinuteHand(){
 function drawSecondHand(){
 }
 function createClock(){
+	addBackgroundImage();
 }
 function clockApp(){
+	if(!clockImageLoaded){
+		setTimeout('clockApp()', 100);
+	return;
+	}
+	createClock();
 }
+
 clockApp(); // Start the clock
+
 </script>
 </body>
 </html> 
