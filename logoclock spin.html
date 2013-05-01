@@ -1,0 +1,50 @@
+<html>
+<head>
+   <title>HTML5 Canvas Clock</title>
+</head>
+<body>
+   <canvas id="ClockCanvas" width="409" height="409">
+    Your browser does not support canvas
+  </canvas>
+<script>
+var canvas = document.getElementById('ClockCanvas');
+var context = canvas.getContext('2d');
+
+var clockImage = new Image();
+var clockImageLoaded = false;
+clockImage.onload = function(){
+	clockImageLoaded = true;
+}
+clockImage.src = 'logo.png';
+	
+function addBackgroundImage(){
+	context.drawImage(clockImage, canvas.width/2 * -1 ,canvas.height/2 * -1,canvas.width, canvas.height); 
+}
+
+function drawSecondHand(theDate){
+	var seconds = theDate.getSeconds();
+	context.rotate(Math.PI/30*seconds);	
+}
+
+function createClock(){
+
+	addBackgroundImage();
+	var theDate = new Date();
+	drawSecondHand(theDate);
+}
+
+function clockApp(){
+	if(!clockImageLoaded){
+		setTimeout('clockApp()', 100);
+	return;
+	}
+	context.translate(canvas.width/2, canvas.height/2);
+	createClock();
+	setInterval('createClock()', 20)
+}
+
+clockApp(); // Start the clock
+
+</script>
+</body>
+</html> 

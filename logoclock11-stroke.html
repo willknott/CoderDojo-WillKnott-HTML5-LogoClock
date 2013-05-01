@@ -1,0 +1,138 @@
+<html>
+<head>
+   <title>HTML5 Canvas Clock</title>
+</head>
+<body>
+   <canvas id="ClockCanvas" width="409" height="409">
+    Your browser does not support canvas
+  </canvas>
+<script>
+var canvas = document.getElementById('ClockCanvas');
+var context = canvas.getContext('2d');
+
+var clockImage = new Image();
+var clockImageLoaded = false;
+clockImage.onload = function(){
+	clockImageLoaded = true;
+}
+clockImage.src = 'logo.png';
+	
+function addBackgroundImage(){
+	context.drawImage(clockImage, canvas.width/2 * -1 ,canvas.height/2 * -1,canvas.width, canvas.height); 
+}
+
+function degreesToRadians(degrees) {
+   return (Math.PI / 180) * degrees
+} 
+
+function drawHand(size){
+	var shadowOffset = 8;
+	context.shadowColor = '#555';
+	context.shadowBlur = 10;
+	context.shadowOffsetX = shadowOffset;
+	context.shadowOffsetY = shadowOffset;
+	
+	context.beginPath();
+	context.moveTo(0,10); // center
+	context.lineTo(-4, -10);
+	context.lineTo(0, size * -1);
+	context.lineTo(4,-10);
+	context.lineTo(0,10);
+	context.fill();
+	context.stroke();
+   
+}
+
+function drawStroke(size){
+	var shadowOffset = 8;
+	context.shadowColor = '#555';
+	context.shadowBlur = 10;
+	context.shadowOffsetX = shadowOffset;
+	context.shadowOffsetY = shadowOffset;
+	
+
+	context.lineWidth=8;
+	context.beginPath();
+	context.moveTo(0,10);
+	context.lineTo(0, size * -1);
+	context.stroke();
+	
+}
+
+
+function drawMinuteHand(theDate){
+	var minutes = theDate.getMinutes() + theDate.getSeconds() / 60;
+	var min = theDate.getMinutes();
+	var sec = theDate.getSeconds()
+	context.save();
+	context.strokeStyle = 'green';
+	context.fillStyle = 'green';
+//	context.rotate( degreesToRadians(minutes * 6));
+	context.rotate(Math.PI/30*(min+(sec/60)));
+	//drawHand(150);
+	drawStroke(150);
+	
+	context.restore();
+}
+
+function drawHourHand(theDate){
+	var hours = theDate.getHours() + theDate.getMinutes() / 60;
+	var hrs=theDate.getHours();
+    var min=theDate.getMinutes();
+    var sec=theDate.getSeconds();
+	var degrees = (hours * 360 / 12) % 360;
+	
+	context.save();
+	context.strokeStyle = 'blue';
+	context.fillStyle = 'blue';
+//	context.rotate( degreesToRadians(degrees * 6));
+	context.rotate(Math.PI/6*(hrs+(min/60)+(sec/3600)));	
+//	drawHand(110);
+	drawStroke(110);
+	context.restore();
+}
+
+function drawSecondHand(theDate){
+	var seconds = theDate.getSeconds();
+	
+	context.save();
+	context.strokeStyle = 'red';
+	context.fillStyle = 'red';
+//	context.rotate( degreesToRadians(seconds * 6));
+	context.rotate(Math.PI/30*seconds);
+//	drawHand(180);
+	drawStroke(180);
+	context.restore();
+}
+
+function writeBrandName(){
+
+}
+
+function createClock(){
+
+	addBackgroundImage();
+
+	var theDate = new Date();
+
+	drawHourHand(theDate);
+	drawMinuteHand(theDate);
+	drawSecondHand(theDate);
+
+}
+
+function clockApp(){
+	if(!clockImageLoaded){
+		setTimeout('clockApp()', 100);
+	return;
+	}
+	context.translate(canvas.width/2, canvas.height/2);
+	createClock();
+	setInterval('createClock()', 1000)
+}
+
+clockApp(); // Start the clock
+
+</script>
+</body>
+</html> 
